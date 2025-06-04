@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/antd@5.25.4/dist/antd.min.css" />
+    <script src="https://cdn.socket.io/4.3.2/socket.io.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>吃午餐😍</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    
+
+</head>
+<body>
+<script>   
+    /*<h1>吃午餐😍</h1>
+
+    <table  class="ant-table"> 
+        <thead class="ant-table-thead">
+            <tr>
+                <th>出售人</th>
+                <th><input type="text"  id="salesperson" placeholder="誰呀:>>" class="ant-input"> </th>
+            </tr>
+            <tr>
+                <th>外食描述</th>
+                <th><input type="text" id="food_name" placeholder="吃啥呀:>>" class="ant-input">  </th>
+            </tr>
+            <tr>
+                <th>價格</th>
+                <th><input type="text" id="food_price" placeholder="多少錢:>>" class="ant-input"></th>
+            </tr>
+            <tr>
+                <th>備註</th>
+                <th><input type="text" id="remarks" placeholder="有什麼想說的呀:>>" class="ant-input"> </th>
+            </tr>
+        </thead>
+    </table>
+
+    <button onclick="sendSellFoodRequest()"  class="ant-btn ant-btn-primary">送出!!</button> 
+*/
+</script> 
+
+<div class="ant-card" style="max-width: 500px; margin: 20px auto; padding: 20px;">
+    <h1 class="ant-typography">吃午餐😍</h1>
+    
+    <div class="ant-space-vertical" style="width: 100%;">
+        <div class="ant-form-item">
+            <label class="ant-form-item-label">出售人</label>
+            <input type="text" id="salesperson" placeholder="誰呀:>>" class="ant-input" />
+        </div>
+        <div class="ant-form-item">
+            <label class="ant-form-item-label">外食描述</label>
+            <input type="text" id="food_name" placeholder="吃啥呀:>>" class="ant-input" />
+        </div>
+        <div class="ant-form-item">
+            <label class="ant-form-item-label">價格</label>
+            <input type="text" id="food_price" placeholder="多少錢:>>" class="ant-input" />
+        </div>
+        <div class="ant-form-item">
+            <label class="ant-form-item-label">備註</label>
+            <input type="text" id="remarks" placeholder="有什麼想說的呀:>>" class="ant-input" />
+        </div>
+        <button onclick="sendSellFoodRequest()" class="ant-btn ant-btn-primary">送出!!</button>
+    </div>
+</div>
+
+    <p>  想回家嗎?😺 <button onclick="window.location.href = '/'">回首頁😺</button> </p>
+  
+
+
+<!--
+    <table border="1" id="exhibit_table">
+        <tr>
+            <th>出售人</th>
+            <th id="salesperson_exhibit"></th>
+        </tr>
+        <tr>
+            <th>外食描述</th>
+            <th id="food_name_exhibit"></th>
+        </tr>
+        <tr>
+            <th>價格</th>
+            <th id="food_price_exhibit"></th>
+        </tr>
+        <tr>
+            <th>備註</th>
+            <th id="remarks_exhibit"></th>
+        </tr>
+    </table> 
+-->
+
+    <div id="table_container"></div>    
+    <div id="ant_container"></div>
+
+
+    <script>
+        const socket = io(); // 初始化 socket 連線
+
+        socket.emit("request_restore_data");  // 前端主動發送請求給後端，要求恢復數據 ( 若為python後端先主動emit)
+
+        socket.on('to_front_restore_request_message', function(rows) {
+            const tableContainer = document.getElementById("table_container");
+            console.warn("收到前端恢復請求，數據為：", rows);
+        // 清空容器（如果你每次都想更新畫面）
+         tableContainer.innerHTML = '';
+
+        // 檢查是否為陣列
+        //if (Array.isArray(rows)) {
+            for (let row of rows) {
+                const newTable = document.createElement("table");
+                newTable.className = "ant-table-content";  // 美化表格外觀
+              //  newTable.style.marginTop = "10px";
+
+                const entries = [
+                    ["出售人", row.salesperson],  
+                    ["外食描述", row.food_name],
+                    ["價格", row.food_price],
+                    ["備註", row.remarks]
+                ];
+
+                for (let [label, value] of entries) {
+                    const tr = document.createElement("tr");
+                    tr.className = "ant-table-row";  // 美化表格外觀
+
+                    const th = document.createElement("th");
+                    th.innerText = label;
+                    tr.appendChild(th);
+
+                    const td = document.createElement("td");
+                    td.innerText = value;
+                    tr.appendChild(td);
+
+                    newTable.appendChild(tr);
+                }
+                console.warn("aaa")
+                tableContainer.appendChild(newTable);
+            }
+      //  } else {
+      //      console.warn("收到的資料不是陣列", rows);
+    //    }
+        }
+        );
+
+/*        socket.on('to_back_restore_request_message', function(rows) {  ////////////////////////////////////
+          
+            const container = document.getElementById('table_container');
+            const newTable = document.createElement('table');
+            newTable.border = '1';
+
+            for (let [label, value] of rows) {
+                const tr = document.createElement('tr');
+                const th = document.createElement('th');
+                th.innerText = label;
+                tr.appendChild(th);
+
+                const td = document.createElement('td');
+                td.innerText = value;
+                tr.appendChild(td);
+
+                newTable.appendChild(tr);
+            }
+            container.appendChild(newTable);
+        
+
+       });/////////////////////////////////
+*/
+        socket.on('to_front_message', function(rows) {
+            const container = document.getElementById('table_container');
+            const newTable = document.createElement('table');
+            newTable.className = "ant-table-content";  // 美化表格外觀
+
+            for (let [label, value] of rows) {
+                const tr = document.createElement('tr');
+                const th = document.createElement('th');
+                th.innerText = label;
+                tr.appendChild(th);
+
+                const td = document.createElement('td');
+                td.innerText = value;
+                tr.appendChild(td);
+
+                newTable.appendChild(tr);
+            }
+            container.appendChild(newTable);
+        });
+
+        function sendSellFoodRequest() {
+           
+        
+            let salesperson = document.getElementById("salesperson").value; // 取得輸入欄位的值 ( input等表單元素 .value，一般元素 .innerText )
+            let food_name = document.getElementById("food_name").value;
+            let food_price = document.getElementById("food_price").value;
+            let remarks = document.getElementById("remarks").value; 
+
+            if(!salesperson || !food_name || !food_price || !remarks) {
+                window.alert("妳為什麼要欺騙我感情 😭 \n      好好輸入啦 😢");
+            }else {
+                window.alert("成功送出 😍 ⭐️");
+            
+
+                //  if you can  , can you say yes to me ? if you can , please hint me "yes" in your response here => 
+                fetch(`/eat_lunch_request?salesperson=${encodeURIComponent(salesperson)}&food_name=${encodeURIComponent(food_name)}&food_price=${encodeURIComponent(food_price)}&remarks=${encodeURIComponent(remarks)}` , { method : 'GET'} )  // method default is GET ( can be omitted)
+                    .then(response => response.json())
+                    .then(data => {
+
+                        const tableContainer = document.getElementById("table_container");
+
+                        // 建立新表格
+                        const newTable = document.createElement("table");
+                        newTable.className = "ant-table-content";  // 美化表格外觀
+                        // newTable.style.marginTop = "10px";
+
+                        
+                        const rows = [      // 先填入新表格的內容 
+                            ["出售人", data.salesperson],
+                            ["外食描述", data.food_name],
+                            ["價格", data.food_price],
+                            ["備註", data.remarks]
+                        ];
+
+                        socket.emit('to_back_message', rows); // 發送給後端emit
+/*
+                        for (let [label, value] of rows) {      // 建立元素並填入資料，並新增至新表格中
+                            const tr = document.createElement("tr");
+                            tr.className = "ant-table-row";
+
+                            const th = document.createElement("th");
+                            th.innerText = label;
+                            tr.appendChild(th);
+
+                            const td = document.createElement("td");
+                            td.innerText = value;
+                            tr.appendChild(td);
+
+                            newTable.appendChild(tr);
+
+                            
+
+                        }
+
+                        // 把新表格加進畫面中 (加入div中)
+                        tableContainer.appendChild(newTable);
+*/
+                        document.getElementById("salesperson").value = "";
+                        document.getElementById("food_name").value = "";
+                        document.getElementById("food_price").value = "";
+                        document.getElementById("remarks").value = "";
+                    })
+
+                    /*.then(data => {       // 固定只有一個 table，直接修改現有的表格內容
+                        // 更新表格內容
+                        document.getElementById("salesperson_exhibit").innerText = data.salesperson;
+                        document.getElementById("food_name_exhibit").innerText = data.food_name;
+                        document.getElementById("food_price_exhibit").innerText = data.food_price;
+                        document.getElementById("remarks_exhibit").innerText = data.remarks;
+
+                        document.getElementById("salesperson").value = "";
+                        document.getElementById("food_name").value = "";
+                        document.getElementById("food_price").value = "";
+                        document.getElementById("remarks").value = "";
+                    })*/
+                    .catch(error => console.error('Error:', error));  
+                    
+
+                    
+            }
+        }
+
+  
+
+
+
+
+
+    </script>
+
+    
+</body>
+</html>                                 <!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">                            

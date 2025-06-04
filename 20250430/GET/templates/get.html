@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>soupfatfat:>>></title>
+    </head>
+
+    <body> 
+        <h1>Flask GET 範例</h1>
+        <input type="text" id="getName" placeholder="輸入名字:>>>"> 
+        <button onclick="sendGetRequest()">送出 GET</button>
+        <p id="getResponse"></p>
+
+        <script>
+            function sendGetRequest() {
+                let name = document.getElementById("getName").value;  // 從輸入欄取得使用者輸入的名字
+                
+                //fetch(`/get_example`)  
+                fetch(`/get_example?name=${encodeURIComponent(name)}` , GET)   // method default is GET ( can be omitted) 
+                // 先編碼(encode)，並向伺服器發送 GET 請求(請求的目標網址:/get_example?name=${encodeURIComponent(name)})
+                //encodeURIComponent(name) 是用來對使用者輸入的 name 做 URL 編碼，避免特殊字元（像是空格、&、= 等）破壞網址格式。
+
+                .then(data => data.json())// 箭頭函式  function(data) { return data.json(); }  並且回傳新的promise
+                .then(data => document.getElementById("getResponse").innerText = data.message)  // 等待上一個 .then 發送的 promise 回傳至此處由data接收，message的value顯示在網頁上的 p 元素中
+                .catch(err => console.error("錯誤:", err));
+            }
+        </script>
+    </body>
+
+
+  
+</html>
+
+
