@@ -1,7 +1,11 @@
-from flask import Flask, render_template , request , jsonify , json
+from flask import Flask, render_template , request , jsonify , json, abort
 from flask_socketio import SocketIO, emit
+from config import Config
+from flask_pymongo import PyMongo
 
 app = Flask(__name__)
+app.config.from_object(Config)  # 將配置載入 Flask 應用
+mongo=PyMongo(app)  # 初始化 PyMongo，連接到 MongoDB
 socketio = SocketIO (app)  # 將 SocketIO 實例綁定到 Flask 應用
 
 @app.route("/")
@@ -19,11 +23,8 @@ def login_req(func):
 def hello():
     return " ha ha , there is nothing here, just a test page"
 
-@app.route("/add/<int:a>/<int:b>") # HTTP method : Path Variables (/5/10) , URL ex : /add/5/10
-def add(a,b):   
-    return f'{a} + {b} = {a+b}'
-
 @app.route("/eat_lunch")
+@login_req
 def eat_lunch():
     return render_template("eat_lunch.html")
 
