@@ -1,4 +1,4 @@
-from flask import Flask, render_template , request , jsonify , json, abort
+from flask import Flask, render_template , request , jsonify , json, abort,session,redirect
 from flask_socketio import SocketIO, emit
 from config import Config
 from flask_pymongo import PyMongo
@@ -14,10 +14,34 @@ def initialization():
 
 def login_req(func):
     def wrapper(*args, **kwargs):
-        # 在這裡可以添加驗證邏輯
-        # 如果驗證失敗，可以返回錯誤響應或重定向
+        if not session.get('username'):
+            return redirect('/login')
         return func(*args, **kwargs)
     return wrapper
+
+@app.route("/login", methods=['GET', 'POST'])
+def login():
+    error=""
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        # 這裡可以添加驗證邏輯，例如檢查用戶名和密碼是否正確
+        if username and password:
+            session['username'] = username  # 登入成功，設置 session
+            return redirect('/')
+        else:
+            return render_template("login.html", error=error)
+    return render_template("login.html")
+
+@app.route("/register", methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        # 這裡可以添加註冊邏輯，例如將用戶名和密碼存儲到數據庫
+        if username and password:
+            return redirect('/login')
+    return render_template("register.html")
 
 @app.route("/hello")
 def hello():
