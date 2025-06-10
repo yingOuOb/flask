@@ -1,0 +1,82 @@
+<!-- register.html 註冊頁面 -->
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>註冊</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        .register-container {
+            max-width: 400px;
+            margin: 60px auto;
+            padding: 32px 75px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+            border: 1.5px solid rgba(0,0,0,0.5); /* 黑色、細、透明度50% */
+        }
+        .register-title {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 24px;
+            color: #0d6efd;
+        }
+        .form-group {
+            margin-bottom: 18px;
+        }
+        label {
+            display: block;
+            margin-bottom: 6px;
+            color: #333;
+        }
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+        .register-btn {
+            width: 100%;
+            padding: 12px;
+            background: #0d6efd;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .register-btn:hover {
+            background: #0b5ed7;
+        }
+        .error-message {
+            color: #dc3545;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <div class="register-title">註冊帳號</div>
+        {% if error %}
+            <div class="error-message">{{ error }}</div>
+        {% endif %}
+        <form method="post" action="/register">
+            <div class="form-group">
+                <label for="username">帳號</label>
+                <input type="text" id="username" name="username" required autocomplete="username">
+            </div>
+            <div class="form-group">
+                <label for="password">密碼</label>
+                <input type="password" id="password" name="password" required autocomplete="new-password">
+            </div>
+            <button type="submit" class="register-btn">註冊</button>
+        </form>
+        <div style="text-align:center;margin-top:16px;">
+            已有帳號？<a href="/login" style="color:#0d6efd;">登入</a>
+        </div>
+    </div>
+</body>
+</html>

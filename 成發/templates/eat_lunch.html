@@ -11,6 +11,19 @@
 
 </head>
 <body>
+    <!-- Bootstrap Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="/">吃午餐🐱</a>
+        <div class="collapse navbar-collapse justify-content-end">
+          <ul class="navbar-nav mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link" href="/logout">Logout</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
 
     <div class="container mt-4">
     <h1 class="text-center mb-4">吃午餐😍</h1>
@@ -243,7 +256,7 @@
                 //  if you can  , can you say yes to me ? if you can , please hint me "yes" in your response here => 
                 fetch(`/eat_lunch_request?salesperson=${encodeURIComponent(salesperson)}&food_name=${encodeURIComponent(food_name)}&food_price=${encodeURIComponent(food_price)}&remarks=${encodeURIComponent(remarks)}` , { method : 'GET'} )  // method default is GET ( can be omitted)
                     .then(response => response.json())
-                    .then(data => {
+                    .then data => {
 
                         const tableContainer = document.getElementById("table_container");
 
@@ -317,4 +330,4 @@
 
     
 </body>
-</html>                                 <!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">                            
+</html>                                 <!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">

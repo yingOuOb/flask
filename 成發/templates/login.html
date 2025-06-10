@@ -1,35 +1,87 @@
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
-  	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/v4-shims.css">
-
-<br><br>
-
-<!-- input No.1 -->
-<table>
-  <tr>
-    <td class="icon"><i class='fas fa-search icon'></i></td>
-    <td><input type="text"></td>
-    <td class="btn"><div class="submitBtn">submit</div></td>
-  </tr>
-</table>
-
-<br><br>
-
-<!-- input No.2 -->
-<table>
-  <tr>
-    <td class="icon" style="background: #c1c1c1; padding: 5px; border-radius: 5px;">+886</td>
-    <td><input type="text"></td>
-    <td class="btn"><div class="submitBtn">submit</div></td>
-  </tr>
-</table>
-
-<br><br>
-
-<!-- input No.3 -->
-<table style="border: 1px solid black; border-radius: 50px; padding: 5px;">
-  <tr>
-    <td class="icon" style="border-right: 1px solid black; padding-right: 5px;">+886</td>
-    <td><input type="text"></td>
-    <td class="btn"><div class="submitBtn">submit</div></td>
-  </tr>
-</table>
+<!-- login.html 登入頁面 -->
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>登入</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        .login-container {
+            max-width: 400px;
+            margin: 60px auto;
+            padding: 32px 75px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+            border: 1.5px solid rgba(0,0,0,0.5);
+        }
+        .login-title {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 24px;
+            color: #0d6efd;
+        }
+        .form-group {
+            margin-bottom: 18px;
+        }
+        label {
+            display: block;
+            margin-bottom: 6px;
+            color: #333;
+        }
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background: #0d6efd;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .login-btn:hover {
+            background: #0b5ed7;
+        }
+        .error-message {
+            color: #dc3545;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-title">登入帳號</div>
+        {% if error %}
+            <div class="error-message">{{ error }}</div>
+        {% endif %}
+        <form method="post" action="/login" id="loginForm">
+            <div class="form-group">
+                <label for="username">帳號</label>
+                <input type="text" id="username" name="username" required autocomplete="username">
+            </div>
+            <div class="form-group">
+                <label for="password">密碼</label>
+                <input type="password" id="password" name="password" required autocomplete="current-password">
+            </div>
+            <button type="submit" class="login-btn">登入</button>
+        </form>
+        <div style="text-align:center;margin-top:16px;">
+            沒有帳號？<a href="/register" style="color:#0d6efd;">註冊</a>
+        </div>
+    </div>
+    <script>
+        if (window.location.search.includes('next=eat_lunch')) {
+            window.alert('請先登入');
+        }
+    </script>
+</body>
+</html>

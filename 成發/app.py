@@ -19,29 +19,47 @@ def login_req(func):
         return func(*args, **kwargs)
     return wrapper
 
+@app.route("/register", methods=['GET', 'POST'])
+def register():
+    error = ""
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        existing_userame = mongo.db.users.find_one({"username": username})
+        if existing_userame:
+            error += "Username already exists. Please choose a different username."
+        if username and password:
+            user={username: username, password: password}
+            mongo.db.users.insert_one(user)
+            session['username'] = username
+            return redirect('/eat_lunch')
+    return render_template("register.html")
+
 @app.route("/login", methods=['GET', 'POST'])
 def login():
     error=""
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
-        # 這裡可以添加驗證邏輯，例如檢查用戶名和密碼是否正確
+        existing_user = mongo.db.users.find_one({"username": username, "password": password})
+        if not existing_user or existing_user['password'] != password:
+            error += "Invalid username or password. Please try again."
         if username and password:
+            session['status'] = "login"
             session['username'] = username  # 登入成功，設置 session
             return redirect('/')
         else:
             return render_template("login.html", error=error)
     return render_template("login.html")
 
-@app.route("/register", methods=['GET', 'POST'])
-def register():
-    if request.method == 'POST':
-        username = request.form.get('username')
-        password = request.form.get('password')
-        # 這裡可以添加註冊邏輯，例如將用戶名和密碼存儲到數據庫
-        if username and password:
-            return redirect('/login')
-    return render_template("register.html")
+@app.route("/logout")
+def logout():
+    if session['status'] == "login":
+        session['status'] = "logout"
+        session.pop('username', None)
+        return redirect('/')
+    else:
+        return "你並未登入"
 
 @app.route("/hello")
 def hello():
