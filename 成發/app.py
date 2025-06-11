@@ -29,7 +29,7 @@ def register():
         if existing_userame:
             error += "Username already exists. Please choose a different username."
         if username and password:
-            user={username: username, password: password}
+            user={'username': username,'password': password}
             mongo.db.users.insert_one(user)
             session['username'] = username
             return redirect('/eat_lunch')
@@ -41,7 +41,7 @@ def login():
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
-        existing_user = mongo.db.users.find_one({"username": username, "password": password})
+        existing_user = mongo.db.users.find_one({"username": username})
         if not existing_user or existing_user['password'] != password:
             error += "Invalid username or password. Please try again."
         if username and password:
